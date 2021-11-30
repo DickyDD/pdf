@@ -29,7 +29,9 @@ Future<Uint8List> generateDocument(
 
   final font1 = await PdfGoogleFonts.openSansRegular();
   final font2 = await PdfGoogleFonts.openSansBold();
-  final shape = await rootBundle.loadString('assets/watermark.txt');
+  final profileImage = pw.MemoryImage(
+    (await rootBundle.load('assets/watermark.jpg')).buffer.asUint8List(),
+  );
   final swirls = await rootBundle.loadString('assets/swirls2.svg');
 
   doc.addPage(
@@ -42,8 +44,7 @@ Future<Uint8List> generateDocument(
           marginTop: 0,
         ),
         orientation: pw.PageOrientation.portrait,
-        // buildBackground: (context) =>
-        //     pw.SvgImage(svg: shape, ),
+        buildBackground: (context) => pw.Image(profileImage),
         theme: pw.ThemeData.withFont(
           base: font1,
           bold: font2,
@@ -58,7 +59,6 @@ Future<Uint8List> generateDocument(
           ),
           child: pw.Column(
             children: [
-               pw.SvgImage(svg: shape, ),
               pw.Spacer(),
               pw.RichText(
                   text: pw.TextSpan(children: [
